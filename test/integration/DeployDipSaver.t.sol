@@ -8,8 +8,8 @@ import {DipSaver} from "../../src/DipSaver.sol";
 contract DeployIntegrationTest is Test {
     function testDeployViaScript() public {
         DeployDipSaver deployer = new DeployDipSaver();
-        DipSaver ds = deployer.run();
-        uint256 price = ds.getLatestPrice();
+        DipSaver dipSaver = deployer.run();
+        uint256 price = dipSaver.getLatestPrice();
         assertGt(price, 0);
     }
 }

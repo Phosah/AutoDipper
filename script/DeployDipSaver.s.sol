@@ -21,10 +21,12 @@ contract DeployDipSaver is Script {
         address usdcAddress;
 
         if (block.chainid == 1) {
-            // Mainnet: use the *real* USDC contract
-            usdcAddress = 0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6;
+            // USDC / USD address from chainlink data feeds: 0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6
+
+            // Mainnet
+            usdcAddress = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
         } else if (block.chainid == 11155111) {
-            // Sepolia: use the *real* USDC contract
+            // Sepolia: using real USDC contract from price feeds
             usdcAddress = 0xA2F78ab2355fe2f984D808B5CeE7FD0A93D5270E;
         } else {
             // Local Anvil: deploy a mock USDC
