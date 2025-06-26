@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
+pragma solidity ^0.8.18;
 
 import {Test, console} from "forge-std/Test.sol";
 import {DeployDipSaver} from "../../script/DeployDipSaver.s.sol";
