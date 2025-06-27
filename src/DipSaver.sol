@@ -1,42 +1,19 @@
-// Layout of Contract:
-// version
-// imports
-// errors
-// interfaces, libraries, contracts
-// Type declarations
-// State variables
-// Events
-// Modifiers
-// Functions
-
-// Layout of Functions:
-// constructor
-// receive function (if exists)
-// fallback function (if exists)
-// external
-// public
-// internal
-// private
-// view & pure functions
-
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity 0.8.18;
 
 import {AggregatorV3Interface} from "../lib/chainlink-brownie-contracts/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
-// import {VRFCoordinatorV2_5Mock} from "../lib/chainlink-brownie-contracts/contracts/src/v0.8/vrf/mocks/VRFCoordinatorV2_5Mock.sol";
 import {PriceConverter} from "./PriceConverter.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-// Errors
 error DipSaver__InsufficientDeposit();
 error DipSaver__OrderNotFound();
 error DipSaver__DipPriceTooLow();
 error DipSaver__PriceNotReached();
 
-/* @title A  Dip Saver Contract
+/* @title A Contract
  * @author Efosa Uyi-Idahor
  * @notice This contract is a placeholder for a buy the dip saver system.
- * @dev Implements Chainlink VRF2.5
+ * @dev This contract allows users to create dip orders where they can deposit USDC and set a price threshold for ETH.
  */
 
 contract DipSaver {
@@ -48,7 +25,7 @@ contract DipSaver {
     struct DipOrder {
         address user;
         uint256 priceThreshold;
-        uint256 depositUSDC; // Using USDC for deposits 6 decimals
+        uint256 depositUSDC;
         bool active;
     }
 
@@ -68,10 +45,6 @@ contract DipSaver {
     );
     event DipOrderCancelled(uint256 orderId, address indexed user);
 
-    // Handle user deposits
-    // Optional: Use Chainlink Automation to automate monitoring
-    // Mock swap logic for demo (since on-chain DEX is advanced)
-
     constructor(address usdcAddress, address priceFeedAddress) {
         i_owner = msg.sender;
         i_usdc = IERC20(usdcAddress);
@@ -85,7 +58,6 @@ contract DipSaver {
         if (usdcAmount == 0) revert DipSaver__InsufficientDeposit();
         if (priceThreshold == 0) revert DipSaver__DipPriceTooLow();
 
-        // transfer USDC from user
         bool ok = i_usdc.transferFrom(msg.sender, address(this), usdcAmount);
         if (!ok) revert DipSaver__InsufficientDeposit();
 
@@ -115,7 +87,6 @@ contract DipSaver {
             revert DipSaver__PriceNotReached();
         }
 
-        // Mock swap logic: Convert USDC to ETH
         uint256 ethAmount = (order.depositUSDC * 1e20) / currentPrice; // Assuming 1 ETH = 1e20 USDC for simplicity
 
         ethBalance[order.user] += ethAmount;

@@ -4,7 +4,6 @@ pragma solidity 0.8.18;
 import {Script} from "forge-std/Script.sol";
 import {DipSaver} from "../src/DipSaver.sol";
 import {HelperConfig} from "./HelperConfig.s.sol";
-
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 /// @dev Minimal ERC20 for local USDC
@@ -24,7 +23,7 @@ contract DeployDipSaver is Script {
             // USDC / USD address from chainlink data feeds: 0x8fFfFfd4AfB6115b954Bd326cbe7B4BA576818f6
 
             // Mainnet
-            usdcAddress = 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48;
+            usdcAddress = 0x8cFb7C6440b4b09a76A85A7D40EE3F7663cDd8A4;
         } else if (block.chainid == 11155111) {
             // Sepolia: using real USDC contract from price feeds
             usdcAddress = 0xA2F78ab2355fe2f984D808B5CeE7FD0A93D5270E;
@@ -34,7 +33,6 @@ contract DeployDipSaver is Script {
             usdcAddress = address(mock);
         }
 
-        // Deploy the DipSaver contract
         vm.startBroadcast();
         DipSaver dipSaver = new DipSaver(usdcAddress, priceFeed);
         vm.stopBroadcast();
