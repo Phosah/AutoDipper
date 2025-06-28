@@ -77,8 +77,6 @@ export const useDipSaver = () => {
     if (!dipSaverAddress || !publicClient) return;
     
     try {
-      console.log("Loading orders from contract...");
-      
       // Get the order count
       const count = await publicClient.readContract({
         address: dipSaverAddress,
@@ -87,7 +85,6 @@ export const useDipSaver = () => {
       });
       
       const orderCount = Number(count);
-      console.log("Total orders:", orderCount);
       
       // Fetch all orders
       const fetchedOrders: DipOrder[] = [];
@@ -117,7 +114,6 @@ export const useDipSaver = () => {
         }
       }
       
-      console.log("Fetched orders:", fetchedOrders);
       setOrders(fetchedOrders);
       
     } catch (error) {
@@ -128,78 +124,44 @@ export const useDipSaver = () => {
 
 
   const createDipOrder = async (priceThreshold: number, usdcAmount: number) => {
-    console.log("🚀 Starting createDipOrder with params:", { priceThreshold, usdcAmount });
     
     if (!dipSaverAddress || !usdcAddress) {
-      console.error("❌ Missing required addresses:", { dipSaverAddress, usdcAddress });
       return;
     }
   
-    console.log("✅ Addresses confirmed:", { dipSaverAddress, usdcAddress });
 
     try {
       setIsLoading(true);
-      console.log("⏳ Loading state set to true");
 
-      // Convert frontend amount (18 decimals) to contract amount (6 decimals)
-      const frontendAmount = parseUnits(usdcAmount.toString(), 18); // Frontend uses 18 decimals
-      const contractAmount = parseUnits(usdcAmount.toString(), 18);   // Contract expects 18 decimals (MockUSDC)
+      const frontendAmount = parseUnits(usdcAmount.toString(), 18);
+      const contractAmount = parseUnits(usdcAmount.toString(), 18);
       
-      console.log("💰 Preparing USDC approval:", {
-        spender: dipSaverAddress,
-        frontendAmount: frontendAmount.toString(),
-        contractAmount: contractAmount.toString(),
-        humanReadable: usdcAmount,
-      });
-
-      console.log("📝 Sending approval transaction...");
       const approvalTxHash = await writeContractAsync({
         address: usdcAddress,
         abi: USDC_ABI,
         functionName: "approve",
-        args: [dipSaverAddress, frontendAmount], // Use 18 decimals for approval
+        args: [dipSaverAddress, frontendAmount],
       });
 
-      console.log("✅ Approval transaction hash:", approvalTxHash);
-      console.log("⏳ Waiting for approval transaction...");
-
-      // Wait for the transaction receipt
       const approvalTxReceipt = await provider.waitForTransaction(approvalTxHash);
       console.log("✅ Approval transaction confirmed:", approvalTxReceipt);
 
-      // Log createDipOrder transaction details
       const parsedPriceThreshold = parseUnits(priceThreshold.toString(), PRICE_FEED_DECIMALS);
 
-      console.log("🎯 Preparing createDipOrder:", {
-        priceThreshold: parsedPriceThreshold.toString(),
-        usdcAmount: contractAmount.toString(), // Use 6 decimals for contract
-        humanReadable: { priceThreshold, usdcAmount },
-      });
-
-      console.log("📝 Sending createDipOrder transaction...");
       const dipOrderTxHash = await writeContractAsync({
         address: dipSaverAddress,
         abi: DipSaverABI,
         functionName: "createDipOrder",
-        args: [parsedPriceThreshold, contractAmount], // Use 6 decimals for contract
+        args: [parsedPriceThreshold, contractAmount],
       });
 
-      console.log("✅ DipOrder transaction hash:", dipOrderTxHash);
-      console.log("⏳ Waiting for dip order transaction...");
 
-      // Wait for the transaction receipt
       const dipOrderTxReceipt = await provider.waitForTransaction(dipOrderTxHash);
       console.log("✅ Order created:", dipOrderTxReceipt);
-      console.log("🎉 DipOrder transaction confirmed:", dipOrderTxReceipt);
-      console.log("✅ createDipOrder completed successfully!");
 
     } catch (error) {
-      console.error("💥 Error in createDipOrder:");
-      console.error("Error type:", error?.constructor?.name);
-      console.error("Error message:", (error as Error)?.message);
-      console.error("Full error object:", error);
+      console.error("Error creating dip order:", error);
     } finally {
-      console.log("🏁 Cleaning up - setting loading to false");
       setIsLoading(false);
     }
   };
@@ -247,7 +209,6 @@ export const useDipSaver = () => {
     return Number(formatUnits(price, PRICE_FEED_DECIMALS));
   };
 
-  // Format USDC for display
   const formatUSDC = (amount: bigint) => {
     console.log("Raw USDC balance:", amount.toString());
     const formatted = Number(formatUnits(amount, USDC_DECIMALS));
@@ -255,12 +216,10 @@ export const useDipSaver = () => {
     return formatted;
   };
 
-  // Format ETH for display
   const formatETH = (amount: bigint) => {
     return Number(formatEther(amount));
   };
 
-  // Refresh data when transaction succeeds
   useEffect(() => {
     if (isTransactionSuccess) {
       loadOrders();
@@ -276,7 +235,6 @@ export const useDipSaver = () => {
     }
   }, [address, dipSaverAddress, publicClient]);
 
-  // Update balances
   useEffect(() => {
     if (userUsdcBalance && typeof userUsdcBalance === 'bigint') setUsdcBalance(userUsdcBalance);
     if (userEthBalance && typeof userEthBalance === 'bigint') setEthBalance(userEthBalance);
