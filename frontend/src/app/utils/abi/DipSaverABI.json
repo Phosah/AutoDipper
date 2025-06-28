@@ -327,5 +327,10 @@
     "type": "error",
     "name": "DipSaver__PriceNotReached",
     "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "DipSaver__USDCTransferFailed",
+    "inputs": []
   }
 ]

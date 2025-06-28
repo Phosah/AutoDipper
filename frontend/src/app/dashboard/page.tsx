@@ -40,10 +40,10 @@ const Dashboard = () => {
   const { latestPrice, usdcBalance, orderCount } = useDipSaver();
   const priceChange = 2.3; // TODO: Calculate real price change
 
-  // useEffect(() => {
-  //   console.log("Latest price from contract:", latestPrice);
-  //   console.log("usdc balance", usdcBalance);
-  // }, [latestPrice, usdcBalance]);
+  useEffect(() => {
+    console.log("Latest price from contract:", latestPrice);
+    console.log("usdc balance", usdcBalance);
+  }, [latestPrice, usdcBalance]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -109,6 +109,8 @@ interface OrderListProps {
 
 const OrderList = ({ orders, onExecute, onCancel }: OrderListProps) => {
   const { latestPrice } = useDipSaver();
+
+  console.log('Orders in queue:', orders)
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
@@ -221,11 +223,20 @@ const OrderForm = ({
 
   const handleApprove = () => {
     onApprove(parseFloat(amount));
+    console.log("Approving USDC for amount:", amount);
+    console.log("Assuming approval transaction successful");
     setIsApproved(true);
   };
 
   const handleSubmit = () => {
     if (!threshold || !amount) return;
+
+    console.log(
+      "Creating order with threshold:",
+      threshold,
+      "and amount:",
+      amount
+    );
     onCreateOrder({
       threshold: parseFloat(threshold),
       amount: parseFloat(amount),

@@ -9,8 +9,8 @@ contract DeployMockUSDC is Script {
     function run() external {
         vm.startBroadcast();
         MockUSDC usdc = new MockUSDC();
-        // Mint 10,000 USDC (with 6 decimals) to your wallet
-        usdc.mint(msg.sender, 10_000 * 1e6);
+        // Mint 10,000 USDC (with 18 decimals) to your wallet
+        usdc.mint(msg.sender, 10_000 * 1e18);
         vm.stopBroadcast();
     }
 }

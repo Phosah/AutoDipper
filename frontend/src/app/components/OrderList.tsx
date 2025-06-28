@@ -1,55 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Zap, Bell } from "lucide-react";
-
-const useMockData = () => {
-  const [ethPrice, setEthPrice] = useState(2400);
-  const [usdcBalance, setUsdcBalance] = useState(5000);
-  const [orders, setOrders] = useState<Order[]>([
-    {
-      id: 1,
-      threshold: 2200,
-      amount: 1000,
-      isActive: true,
-      created: "2024-01-15",
-    },
-    {
-      id: 2,
-      threshold: 2000,
-      amount: 2000,
-      isActive: true,
-      created: "2024-01-14",
-    },
-  ]);
-
-  useEffect(() => {
-    // Simulate price updates
-    const interval = setInterval(() => {
-      setEthPrice((prev) => prev + (Math.random() - 0.5) * 50);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return { ethPrice, usdcBalance, orders, setOrders };
-};
-
-interface Order {
-  id: number;
-  threshold: number;
-  amount: number;
-  isActive: boolean;
-  created: string;
-}
-
-interface OrderListProps {
-  orders: Order[];
-  onExecute: (orderId: number) => void;
-  onCancel: (orderId: number) => void;
-}
+import { useDipSaver } from "@/hooks/useDipSaver";
+import { OrderListProps } from "@/types";
 
 const OrderList = ({ orders, onExecute, onCancel }: OrderListProps) => {
-  const { ethPrice } = useMockData();
+  const { latestPrice } = useDipSaver();
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
@@ -66,11 +22,12 @@ const OrderList = ({ orders, onExecute, onCancel }: OrderListProps) => {
         </div>
       ) : (
         <div className="space-y-4">
-          {orders.map((order: Order) => {
-            const isTriggered = ethPrice <= order.threshold;
+          {orders.map((order, index) => {
+            const isTriggered =
+              latestPrice <= order.threshold;
             return (
               <div
-                key={order.id}
+                key={index}
                 className={`p-4 rounded-lg border-2 transition-all ${
                   isTriggered
                     ? "border-green-300 bg-green-50"
@@ -86,7 +43,8 @@ const OrderList = ({ orders, onExecute, onCancel }: OrderListProps) => {
                         }`}
                       />
                       <span className="font-semibold text-gray-800">
-                        Buy at ${order.threshold.toLocaleString()}
+                        Buy at $
+                        {order.threshold.toLocaleString()}
                       </span>
                       {isTriggered && (
                         <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
@@ -97,13 +55,16 @@ const OrderList = ({ orders, onExecute, onCancel }: OrderListProps) => {
                     <div className="text-sm text-gray-600 space-y-1">
                       <p>
                         <strong>Amount:</strong> $
-                        {order.amount.toLocaleString()} USDC
+                        {order.amount.toLocaleString()}{" "}
+                        USDC
                       </p>
                       <p>
-                        <strong>Created:</strong> {order.created}
+                        <strong>Status:</strong>{" "}
+                        {order.isActive ? "Active" : "Inactive"}
                       </p>
                       <p>
-                        <strong>Current Price:</strong> ${ethPrice.toFixed(2)}
+                        <strong>Current Price:</strong> $
+                        {latestPrice.toFixed(2)}
                       </p>
                     </div>
                   </div>
@@ -111,17 +72,25 @@ const OrderList = ({ orders, onExecute, onCancel }: OrderListProps) => {
                   <div className="flex gap-2">
                     <button
                       onClick={() => onExecute(order.id)}
+                      disabled={!order.isActive}
                       className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                        isTriggered
+                        isTriggered && order.isActive
                           ? "bg-green-500 hover:bg-green-600 text-white"
                           : "bg-blue-500 hover:bg-blue-600 text-white"
+                      } ${
+                        !order.isActive ? "opacity-50 cursor-not-allowed" : ""
                       }`}
                     >
-                      {isTriggered ? "Execute Now" : "Force Execute"}
+                      {isTriggered && order.isActive
+                        ? "Execute Now"
+                        : "Force Execute"}
                     </button>
                     <button
                       onClick={() => onCancel(order.id)}
-                      className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors"
+                      disabled={!order.isActive}
+                      className={`px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors ${
+                        !order.isActive ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                     >
                       Cancel
                     </button>

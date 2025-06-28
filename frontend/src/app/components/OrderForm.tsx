@@ -3,28 +3,34 @@
 import { useState } from "react";
 import { DollarSign, Zap, CheckCircle } from "lucide-react";
 
-interface OrderData {
-  threshold: number;
-  amount: number;
-}
-
-interface OrderFormProps {
-  onCreateOrder: (orderData: OrderData) => void;
+const OrderForm = ({
+  onCreateOrder,
+  onApprove,
+}: {
+  onCreateOrder: (orderData: { threshold: number; amount: number }) => void;
   onApprove: (amount: number) => void;
-}
-
-const OrderForm = ({ onCreateOrder, onApprove }: OrderFormProps) => {
+}) => {
   const [threshold, setThreshold] = useState("");
   const [amount, setAmount] = useState("");
   const [isApproved, setIsApproved] = useState(false);
 
   const handleApprove = () => {
     onApprove(parseFloat(amount));
+    console.log("Approving USDC for amount:", amount);
+    console.log("Assuming approval transaction successful");
+    console.log("Threshold price:", threshold, "Amount:", amount);
     setIsApproved(true);
   };
 
   const handleSubmit = () => {
     if (!threshold || !amount) return;
+
+    console.log(
+      "Creating order with threshold:",
+      threshold,
+      "and amount:",
+      amount
+    );
     onCreateOrder({
       threshold: parseFloat(threshold),
       amount: parseFloat(amount),
@@ -47,14 +53,17 @@ const OrderForm = ({ onCreateOrder, onApprove }: OrderFormProps) => {
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               Price Threshold (USD)
             </label>
-            <div className=" flex items-center justify-center px-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors">
-              <DollarSign className="text-gray-400" size={18} />
+            <div className="relative">
               <input
                 type="number"
                 value={threshold}
                 onChange={(e) => setThreshold(e.target.value)}
                 placeholder="e.g. 2200"
-                className="w-full p-3 focus:outline-none"
+                className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors pl-8 text-gray-800"
+              />
+              <DollarSign
+                className="absolute left-2 top-4 text-gray-400"
+                size={18}
               />
             </div>
             <p className="text-xs text-gray-500 mt-1">
@@ -66,14 +75,17 @@ const OrderForm = ({ onCreateOrder, onApprove }: OrderFormProps) => {
             <label className="block text-sm font-semibold text-gray-700 mb-2">
               USDC Amount
             </label>
-            <div className=" flex items-center justify-center px-2 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors">
-              <DollarSign className="text-gray-400" size={18} />
+            <div className="relative">
               <input
                 type="number"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 placeholder="e.g. 1000"
-                className="w-full p-3 focus:outline-none"
+                className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:outline-none transition-colors pl-8 text-gray-800"
+              />
+              <DollarSign
+                className="absolute left-2 top-4 text-gray-400"
+                size={18}
               />
             </div>
             <p className="text-xs text-gray-500 mt-1">

@@ -9,6 +9,7 @@ error DipSaver__InsufficientDeposit();
 error DipSaver__OrderNotFound();
 error DipSaver__DipPriceTooLow();
 error DipSaver__PriceNotReached();
+error DipSaver__USDCTransferFailed();
 
 /* @title A Contract
  * @author Efosa Uyi-Idahor
@@ -59,7 +60,7 @@ contract DipSaver {
         if (priceThreshold == 0) revert DipSaver__DipPriceTooLow();
 
         bool ok = i_usdc.transferFrom(msg.sender, address(this), usdcAmount);
-        if (!ok) revert DipSaver__InsufficientDeposit();
+        if (!ok) revert DipSaver__USDCTransferFailed();
 
         orders[orderCount] = DipOrder(
             msg.sender,

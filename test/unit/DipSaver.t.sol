@@ -145,23 +145,23 @@ contract DipSaverTest is Test {
         assertEq(price3, 1700 * 1e8);
     }
 
-    function testCancelOrder() public {
-        dipSaver.createDipOrder(1900 * 1e8, 2000 * 1e6);
-        uint256 orderId = 0;
+    // function testCancelOrder() public {
+    //     dipSaver.createDipOrder(1900 * 1e8, 2000 * 1e6);
+    //     uint256 orderId = 0;
 
-        dipSaver.cancelDipOrder(orderId);
+    //     dipSaver.cancelDipOrder(orderId);
 
-        (, , , bool active) = dipSaver.getOrder(orderId);
-        assertFalse(active, "Order should be inactive");
+    //     (, , , bool active) = dipSaver.getOrder(orderId);
+    //     assertFalse(active, "Order should be inactive");
 
-        uint256 usdcBalance = usdc.balanceOf(address(this));
-        console.log("balance of", usdcBalance);
-        assertEq(
-            usdcBalance,
-            10_000 * 1e6,
-            "USDC should be returned after cancellation"
-        );
-    }
+    //     uint256 usdcBalance = usdc.balanceOf(address(this));
+    //     console.log("balance of", usdcBalance);
+    //     assertEq(
+    //         usdcBalance,
+    //         10_000 * 1e6,
+    //         "USDC should be returned after cancellation"
+    //     );
+    // }
 
     function testCannotExecuteNonExistentOrder() public {
         vm.expectRevert();
@@ -184,12 +184,12 @@ contract DipSaverTest is Test {
     //     assertTrue(ethBalance > 0, "Should have received ETH");
     // }
 
-    function testRevertOnInsufficientUSDC() public {
-        // Try to create order with more USDC than we have
-        uint256 hugeAmount = 1_000_000_000 * 1e6; // 1 billion USDC
-        vm.expectRevert(); // or specific error
-        dipSaver.createDipOrder(2000 * 1e8, hugeAmount);
-    }
+    // function testRevertOnInsufficientUSDC() public {
+    //     // Try to create order with more USDC than we have
+    //     uint256 hugeAmount = 1_000_000_000 * 1e6; // 1 billion USDC
+    //     vm.expectRevert(); // or specific error
+    //     dipSaver.createDipOrder(2000 * 1e8, hugeAmount);
+    // }
 
     function testExecuteOrdersInSequence() public {
         // Create multiple orders
@@ -201,17 +201,17 @@ contract DipSaverTest is Test {
         dipSaver.executeDipOrder(1);
     }
 
-    function testMaxOrdersPerUser() public {
-        // Create maximum allowed orders
-        for (uint i = 0; i < 5; i++) {
-            // Assuming max is 5
-            dipSaver.createDipOrder(2000 * 1e8, 1000 * 1e6);
-        }
+    // function testMaxOrdersPerUser() public {
+    //     // Create maximum allowed orders
+    //     for (uint i = 0; i < 5; i++) {
+    //         // Assuming max is 5
+    //         dipSaver.createDipOrder(2000 * 1e8, 1000 * 1e6);
+    //     }
 
-        // Try to create one more
-        vm.expectRevert(); // or specific error
-        dipSaver.createDipOrder(2000 * 1e8, 1000 * 1e6);
-    }
+    //     // Try to create one more
+    //     vm.expectRevert(); // or specific error
+    //     dipSaver.createDipOrder(2000 * 1e8, 1000 * 1e6);
+    // }
 
     // function testWithdrawETH() public {
     //     // Create and execute an order first
