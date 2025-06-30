@@ -1,6 +1,5 @@
 {
-    "build": {
-      "src": "frontend/src/app/page.tsx",
-      "use": "@vercel/next"
-    }
+    "framework": "nextjs",
+    "buildCommand": "npm run build",
+    "outputDirectory": "frontend/.next"
   }
