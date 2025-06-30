@@ -57,8 +57,6 @@ export const NETWORKS: Record<number, NetworkConfig> = {
     name: "Sepolia",
     rpcUrl: "https://eth-sepolia.g.alchemy.com/v2/A33IUFjjL2OZ2LrqMPPmN",
     blockExplorer: "https://sepolia.etherscan.io",
-    // usdcAddress: "0xB71f881Df532Ef31E455e1dB08432c908F414efF", // Mint ERC20 USDC CONTRACT ADDRESS
-    // usdcAddress: "0xa2f78ab2355fe2f984d808b5cee7fd0a93d5270e", // USDC address from DipSaver contract
     usdcAddress: "0x97c633D7d9BE2C69758Add299371662C350aaAe4", // New MockUSDC contract
     ethUsdPriceFeed: "0x694AA1769357215DE4FAC081bf1f309aDC325306", // Sepolia ETH/USD
     dipSaverAddress: "0x5c932e86516b501CF1072E206d2B8052B135500F", // New DipSaver contract
@@ -77,20 +75,3 @@ export interface TokenConfig {
   priceFeedAddress: string;
   decimals: number;
 }
-
-export const SUPPORTED_TOKENS: Record<string, TokenConfig> = {
-  ETH: {
-    symbol: "ETH",
-    name: "Ethereum",
-    address: "0x0000000000000000000000000000000000000000", // Native ETH
-    priceFeedAddress: "0x694AA1769357215DE4FAC081bf1f309aDC325306", // Sepolia ETH/USD
-    decimals: 18,
-  },
-  BTC: {
-    symbol: "BTC", 
-    name: "Bitcoin",
-    address: "0x0000000000000000000000000000000000000001", // Placeholder
-    priceFeedAddress: "0x1b44F3514812d835EB1BDB0acB33d3fA3351Ee43", // Sepolia BTC/USD
-    decimals: 8,
-  },
-}; 
