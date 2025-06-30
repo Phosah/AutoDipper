@@ -16,21 +16,12 @@ const OrderForm = ({
 
   const handleApprove = () => {
     onApprove(parseFloat(amount));
-    console.log("Approving USDC for amount:", amount);
-    console.log("Assuming approval transaction successful");
-    console.log("Threshold price:", threshold, "Amount:", amount);
     setIsApproved(true);
   };
 
   const handleSubmit = () => {
     if (!threshold || !amount) return;
 
-    console.log(
-      "Creating order with threshold:",
-      threshold,
-      "and amount:",
-      amount
-    );
     onCreateOrder({
       threshold: parseFloat(threshold),
       amount: parseFloat(amount),

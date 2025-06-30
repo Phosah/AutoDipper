@@ -505,9 +505,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/AutoDipper/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/AutoDipper/discussions)
-- **Documentation**: [Project Wiki](https://github.com/yourusername/AutoDipper/wiki)
+- **Issues**: [GitHub Issues](https://github.com/Phosah/AutoDipper/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Phosah/AutoDipper/discussions)
+- **Documentation**: [Project Wiki](https://github.com/Phosah/AutoDipper/wiki)
 
 ---
 

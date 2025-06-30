@@ -83,12 +83,16 @@ contract DipSaver {
         if (order.user != msg.sender || !order.active) {
             revert DipSaver__OrderNotFound();
         }
-        uint256 currentPrice = PriceConverter.getPrice(s_priceFeed);
+
+        uint256 currentPrice = getLatestPrice();
+        uint8 priceFeedDecimals = s_priceFeed.decimals();
+
         if (currentPrice > order.priceThreshold) {
             revert DipSaver__PriceNotReached();
         }
 
-        uint256 ethAmount = (order.depositUSDC * 1e20) / currentPrice; // Assuming 1 ETH = 1e20 USDC for simplicity
+        uint256 ethAmount = (order.depositUSDC * (10 ** priceFeedDecimals)) /
+            currentPrice;
 
         ethBalance[order.user] += ethAmount;
         order.active = false;

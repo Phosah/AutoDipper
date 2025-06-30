@@ -1,49 +1,16 @@
 "use client";
+import { useDipSaver } from "@/hooks/useDipSaver";
 import { TrendingDown, TrendingUp, DollarSign, Zap } from "lucide-react";
-import { useState, useEffect } from "react";
-
-interface Order {
-  id: number;
-  threshold: number;
-  amount: number;
-  isActive: boolean;
-  created: string;
-}
-
-const useMockData = () => {
-  const [ethPrice, setEthPrice] = useState(2400);
-  const [usdcBalance, setUsdcBalance] = useState(5000);
-  const [orders, setOrders] = useState<Order[]>([
-    {
-      id: 1,
-      threshold: 2200,
-      amount: 1000,
-      isActive: true,
-      created: "2024-01-15",
-    },
-    {
-      id: 2,
-      threshold: 2000,
-      amount: 2000,
-      isActive: true,
-      created: "2024-01-14",
-    },
-  ]);
-
-  useEffect(() => {
-    // Simulate price updates
-    const interval = setInterval(() => {
-      setEthPrice((prev) => prev + (Math.random() - 0.5) * 50);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return { ethPrice, usdcBalance, orders, setOrders };
-};
+import {  useEffect } from "react";
 
 const Dashboard = () => {
-  const { ethPrice, usdcBalance } = useMockData();
-  const priceChange = 2.3;
+  const { latestPrice, usdcBalance, orderCount } = useDipSaver();
+  const priceChange = 2.3; // TODO: Calculate real price change
+
+  useEffect(() => {
+    console.log("Latest price from contract:", latestPrice);
+    console.log("usdc balance", usdcBalance);
+  }, [latestPrice, usdcBalance]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -51,7 +18,7 @@ const Dashboard = () => {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-blue-100 text-sm font-medium">ETH Price</p>
-            <p className="text-3xl font-bold">${ethPrice.toFixed(2)}</p>
+            <p className="text-3xl font-bold">${latestPrice.toFixed(2)}</p>
           </div>
           <div className="bg-white/20 p-3 rounded-lg">
             <TrendingUp size={24} />
@@ -89,7 +56,7 @@ const Dashboard = () => {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-purple-100 text-sm font-medium">Active Orders</p>
-            <p className="text-3xl font-bold">2</p>
+            <p className="text-3xl font-bold">{orderCount}</p>
           </div>
           <div className="bg-white/20 p-3 rounded-lg">
             <Zap size={24} />

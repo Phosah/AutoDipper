@@ -5,7 +5,7 @@ import { useDipSaver } from "@/hooks/useDipSaver";
 import { OrderListProps } from "@/types";
 
 const OrderList = ({ orders, onExecute, onCancel }: OrderListProps) => {
-  const { latestPrice } = useDipSaver();
+  const {  latestPrice } = useDipSaver();
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
@@ -24,7 +24,7 @@ const OrderList = ({ orders, onExecute, onCancel }: OrderListProps) => {
         <div className="space-y-4">
           {orders.map((order, index) => {
             const isTriggered =
-              latestPrice <= order.threshold;
+              latestPrice <= Number(order.priceThreshold) / 1e8;
             return (
               <div
                 key={index}
@@ -44,7 +44,7 @@ const OrderList = ({ orders, onExecute, onCancel }: OrderListProps) => {
                       />
                       <span className="font-semibold text-gray-800">
                         Buy at $
-                        {order.threshold.toLocaleString()}
+                        {(Number(order.priceThreshold) / 1e8).toLocaleString()}
                       </span>
                       {isTriggered && (
                         <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full font-medium">
@@ -55,12 +55,12 @@ const OrderList = ({ orders, onExecute, onCancel }: OrderListProps) => {
                     <div className="text-sm text-gray-600 space-y-1">
                       <p>
                         <strong>Amount:</strong> $
-                        {order.amount.toLocaleString()}{" "}
+                        {(Number(order.depositUSDC) / 1e6).toLocaleString()}{" "}
                         USDC
                       </p>
                       <p>
                         <strong>Status:</strong>{" "}
-                        {order.isActive ? "Active" : "Inactive"}
+                        {order.active ? "Active" : "Inactive"}
                       </p>
                       <p>
                         <strong>Current Price:</strong> $
@@ -71,25 +71,25 @@ const OrderList = ({ orders, onExecute, onCancel }: OrderListProps) => {
 
                   <div className="flex gap-2">
                     <button
-                      onClick={() => onExecute(order.id)}
-                      disabled={!order.isActive}
+                      onClick={() => onExecute(index)}
+                      disabled={!order.active}
                       className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                        isTriggered && order.isActive
+                        isTriggered && order.active
                           ? "bg-green-500 hover:bg-green-600 text-white"
                           : "bg-blue-500 hover:bg-blue-600 text-white"
                       } ${
-                        !order.isActive ? "opacity-50 cursor-not-allowed" : ""
+                        !order.active ? "opacity-50 cursor-not-allowed" : ""
                       }`}
                     >
-                      {isTriggered && order.isActive
+                      {isTriggered && order.active
                         ? "Execute Now"
                         : "Force Execute"}
                     </button>
                     <button
-                      onClick={() => onCancel(order.id)}
-                      disabled={!order.isActive}
+                      onClick={() => onCancel(index)}
+                      disabled={!order.active}
                       className={`px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors ${
-                        !order.isActive ? "opacity-50 cursor-not-allowed" : ""
+                        !order.active ? "opacity-50 cursor-not-allowed" : ""
                       }`}
                     >
                       Cancel

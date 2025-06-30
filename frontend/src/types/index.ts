@@ -23,7 +23,7 @@ export interface OrderFormProps {
 }
 
 export interface OrderListProps {
-  orders: Order[];
+  orders: DipOrder[];
   onExecute: (orderId: number) => void;
   onCancel: (orderId: number) => void;
 }

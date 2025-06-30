@@ -40,7 +40,6 @@ contract DipSaverTest is Test {
     }
 
     function testRevertWhenNoDeposit() public {
-        // dipSaver.createDipOrder{value: 1 ether}(2000 * 1e8, 1 ether); // Assuming a deposit of 1 ether
         vm.expectRevert(DipSaver__InsufficientDeposit.selector);
         dipSaver.createDipOrder(2000 * 1e8, 0); // Assuming a deposit of 1000 USDC
     }
@@ -81,7 +80,6 @@ contract DipSaverTest is Test {
     }
 
     function testExecuteDipOrder_USDC() public {
-        // uint256 threshold = 1800 * 1e8;
         uint256 threshold = 2000 * 1e18;
         uint256 depositUSDC = 4000 * 1e6;
 
@@ -123,7 +121,6 @@ contract DipSaverTest is Test {
     }
 
     function testRevertWhenPriceAbove() public {
-        // Set up a dip order with a price threshold of 1700 USD
         dipSaver.createDipOrder(1700 * 1e8, 1000 * 1e6);
         vm.expectRevert(DipSaver__PriceNotReached.selector);
         dipSaver.executeDipOrder(0);
@@ -145,51 +142,10 @@ contract DipSaverTest is Test {
         assertEq(price3, 1700 * 1e8);
     }
 
-    // function testCancelOrder() public {
-    //     dipSaver.createDipOrder(1900 * 1e8, 2000 * 1e6);
-    //     uint256 orderId = 0;
-
-    //     dipSaver.cancelDipOrder(orderId);
-
-    //     (, , , bool active) = dipSaver.getOrder(orderId);
-    //     assertFalse(active, "Order should be inactive");
-
-    //     uint256 usdcBalance = usdc.balanceOf(address(this));
-    //     console.log("balance of", usdcBalance);
-    //     assertEq(
-    //         usdcBalance,
-    //         10_000 * 1e6,
-    //         "USDC should be returned after cancellation"
-    //     );
-    // }
-
     function testCannotExecuteNonExistentOrder() public {
         vm.expectRevert();
         dipSaver.executeDipOrder(999);
     }
-
-    // Yet to fully understand
-    // function testPriceUpdateTriggersExecution() public {
-    //     // Create order at $1900
-    //     dipSaver.createDipOrder(1900 * 1e8, 2000 * 1e6);
-
-    //     // Update price feed to $1800
-    //     MockV3Aggregator(address(mockPriceFeed)).updateAnswer(1800 * 1e8);
-
-    //     // Should be able to execute now
-    //     dipSaver.executeDipOrder(0);
-
-    //     // Verify ETH credited
-    //     uint256 ethBalance = dipSaver.ethBalance(address(this));
-    //     assertTrue(ethBalance > 0, "Should have received ETH");
-    // }
-
-    // function testRevertOnInsufficientUSDC() public {
-    //     // Try to create order with more USDC than we have
-    //     uint256 hugeAmount = 1_000_000_000 * 1e6; // 1 billion USDC
-    //     vm.expectRevert(); // or specific error
-    //     dipSaver.createDipOrder(2000 * 1e8, hugeAmount);
-    // }
 
     function testExecuteOrdersInSequence() public {
         // Create multiple orders
@@ -200,35 +156,4 @@ contract DipSaverTest is Test {
         vm.expectRevert(); // Should fail if you require sequential execution
         dipSaver.executeDipOrder(1);
     }
-
-    // function testMaxOrdersPerUser() public {
-    //     // Create maximum allowed orders
-    //     for (uint i = 0; i < 5; i++) {
-    //         // Assuming max is 5
-    //         dipSaver.createDipOrder(2000 * 1e8, 1000 * 1e6);
-    //     }
-
-    //     // Try to create one more
-    //     vm.expectRevert(); // or specific error
-    //     dipSaver.createDipOrder(2000 * 1e8, 1000 * 1e6);
-    // }
-
-    // function testWithdrawETH() public {
-    //     // Create and execute an order first
-    //     dipSaver.createDipOrder(2000 * 1e8, 2000 * 1e6);
-    //     dipSaver.executeDipOrder(0);
-
-    //     // Get initial balance
-    //     uint256 initialBalance = address(this).balance;
-
-    //     // Withdraw ETH
-    //     dipSaver.withdrawETH(1 ether);
-
-    //     // Verify balance increased
-    //     assertEq(
-    //         address(this).balance,
-    //         initialBalance + 1 ether,
-    //         "Should have received 1 ETH"
-    //     );
-    // }
 }
