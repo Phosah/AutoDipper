@@ -5,7 +5,7 @@ import { useDipSaver } from "@/hooks/useDipSaver";
 import { OrderListProps } from "@/types";
 
 const OrderList = ({ orders, onExecute, onCancel }: OrderListProps) => {
-  const {  latestPrice } = useDipSaver();
+  const { latestPrice } = useDipSaver();
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
@@ -55,7 +55,7 @@ const OrderList = ({ orders, onExecute, onCancel }: OrderListProps) => {
                     <div className="text-sm text-gray-600 space-y-1">
                       <p>
                         <strong>Amount:</strong> $
-                        {(Number(order.depositUSDC) / 1e6).toLocaleString()}{" "}
+                        {(Number(order.depositUSDC) / 1e18).toLocaleString()}{" "}
                         USDC
                       </p>
                       <p>
