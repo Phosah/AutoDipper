@@ -1,10 +1,10 @@
 "use client";
 import { useDipSaver } from "@/hooks/useDipSaver";
 import { TrendingDown, TrendingUp, DollarSign, Zap } from "lucide-react";
-import {  useEffect } from "react";
+import { useEffect } from "react";
 
 const Dashboard = () => {
-  const { latestPrice, usdcBalance, orderCount } = useDipSaver();
+  const { latestPrice, usdcBalance, orders } = useDipSaver();
   const priceChange = 2.3; // TODO: Calculate real price change
 
   useEffect(() => {
@@ -56,7 +56,9 @@ const Dashboard = () => {
         <div className="flex items-center justify-between">
           <div>
             <p className="text-purple-100 text-sm font-medium">Active Orders</p>
-            <p className="text-3xl font-bold">{orderCount}</p>
+            <p className="text-3xl font-bold">
+              {orders.filter((order) => order.active === true).length}
+            </p>
           </div>
           <div className="bg-white/20 p-3 rounded-lg">
             <Zap size={24} />
